@@ -1,0 +1,16 @@
+---
+PROJECT_NAME: "AgentKM"
+
+TIME_ZONE: Asia/Vladivostok
+
+ALLOWED_HOSTS:
+  - "*"
+
+POSTGRES_DB_PORT: 7432
+POSTGRES_DB_NAME: 'agent_km'
+POSTGRES_DB_USERNAME: "postgres"
+
+LOCAL_SUBNETS:
+  - "127.0.0.0/8"
+  - "192.168.0.0/16"
+  - "172.16.0.0/12"
