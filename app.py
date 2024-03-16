@@ -2,8 +2,8 @@
 from fastapi import FastAPI
 
 import middlewares
-from endpounts.v1.routes import api_router as v1_router
 from events import startup_event, shutdown_event
+from routers.v1 import api_router as v1_router
 from settings import PROJECT_NAME, API_PREFIX
 from versions import VersionedAPIRouterItem, mount_api_router_items
 
