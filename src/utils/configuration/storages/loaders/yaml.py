@@ -1,9 +1,10 @@
 from pathlib import Path
 
 import yaml
+
 from yaml import Loader
 
-from utils.configuration.storages.loaders.base import ConfigLoader
+from src.utils.configuration.storages.loaders.base import ConfigLoader
 
 
 class YamlConfigLoader(ConfigLoader):

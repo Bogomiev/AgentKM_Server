@@ -1,11 +1,17 @@
 # базовые настройки приложения FastAPI
+import uuid
+
 from fastapi import FastAPI
+from fastapi_users import FastAPIUsers
 
 import middlewares
 from events import startup_event, shutdown_event
-from routers.v1 import api_router as v1_router
+from src.api.v1.v1 import api_router as v1_router
 from settings import PROJECT_NAME, API_PREFIX
-from versions import VersionedAPIRouterItem, mount_api_router_items
+from src.auth.auth import auth_backend
+from src.auth.manager import get_user_manager
+from src.models.user import User
+from src.versions import VersionedAPIRouterItem, mount_api_router_items
 
 BASE_FAST_API_SETTINGS = dict(title=PROJECT_NAME, debug=False, redoc_url=None)
 

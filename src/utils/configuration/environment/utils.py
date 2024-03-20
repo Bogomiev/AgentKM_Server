@@ -1,7 +1,7 @@
 import os
 from typing import Optional, Any, List, Callable, TypeVar, Union
 
-from utils.configuration.environment.exceptions import NoEnvironmentException
+from src.utils.configuration.environment.exceptions import NoEnvironmentException
 
 FuncResult = TypeVar("FuncResult")
 

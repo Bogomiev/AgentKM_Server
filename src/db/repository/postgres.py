@@ -6,69 +6,81 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy import update
-from db.postgresdb import SqlBase
+from sqlalchemy.sql.dml import ReturningInsert
+
 
 Base = declarative_base()
 
 
-class PostgresRepository(abc.ABC):
+class Repository(abc.ABC):
     @abc.abstractmethod
-    async def add(self, session: AsyncSession, data, auto_commit: bool = True):
+    async def add(self, session: AsyncSession, data, auto_commit: bool = True) -> ReturningInsert:
         """
         Добавляет новую запись в базу
         """
+        raise NotImplementedError
 
     @abc.abstractmethod
     async def update(self, session: AsyncSession, data, auto_commit: bool = True):
         """
         Обновляет существующую запись в базе
         """
+        raise NotImplementedError
 
     @abc.abstractmethod
     async def delete(self, session: AsyncSession, data, auto_commit: bool = True):
         """
         Удаляет запись из базы
         """
+        raise NotImplementedError
 
     @abc.abstractmethod
     async def add_all(self, session: AsyncSession, data: Iterable[Any], auto_commit: bool = True):
         """
         Добавляет список новых записей в базу
         """
+        raise NotImplementedError
 
     @abc.abstractmethod
     async def update_all(self, session: AsyncSession, data: List[Any], auto_commit: bool = True):
         """
         Обновляет список существующих записей в базе
         """
+        raise NotImplementedError
 
     @abc.abstractmethod
     async def save_all(self, session: AsyncSession, data: Iterable[Any], auto_commit: bool = True):
         """
         Добавляет новые записи, обновляет существующие
         """
+        raise NotImplementedError
 
     @abc.abstractmethod
     async def delete_all(self, session: AsyncSession, data: Iterable[Any], auto_commit: bool = True):
         """
         Удаляет список существующих записей из базы
         """
+        raise NotImplementedError
 
 
 @dataclasses.dataclass
-class BasePostgresRepository(PostgresRepository):
-    _model: SqlBase
+class BaseRepository(Repository):
+    _model: Any
     _keys: Tuple[Any]
     _exclusion_fields_update: Set[str] = dataclasses.field(default_factory=frozenset)
     _partition: int = 1000
 
     async def add(self, session, item, auto_commit: bool = True):
-        session.add(item)
+        # session.add(item)
+        keys = self._item_keys(item)
+        stmt = insert(self._model).values(self._item_to_dict(item, keys))
         if auto_commit:
             await session.commit()
 
+        return stmt.returning()
+
     async def update(self, session, item, auto_commit: bool = True):
-        keys = frozenset(item.__dict__.keys()) - self._exclusion_fields_update - frozenset(['_sa_instance_state'])
+        keys = self._item_keys(item)
         update_stmt = update(self._model).values(self._item_to_dict(item, keys))
         await session.execute(update_stmt)
         if auto_commit:
@@ -103,6 +115,11 @@ class BasePostgresRepository(PostgresRepository):
     @staticmethod
     def _item_to_dict(item, keys: Iterable[str]) -> Dict:
         return {key: getattr(item, key) for key in keys}
+
+    def _item_keys(self, item):
+        return (frozenset(dict(item).keys())
+                - self._exclusion_fields_update
+                - frozenset(['_sa_instance_state']))
 
     def _gen_records(self, items, keys: Iterable[str]):
         record_partition = []

@@ -1,8 +1,7 @@
 from typing import Union, Dict, Optional
 
 from sqlalchemy.engine import URL
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncEngine, AsyncSession
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncEngine
 
 
 def get_db_connection_url(
@@ -28,34 +27,6 @@ def create_engine_by_url(
 ) -> AsyncEngine:
     """Получить async engine sqlalchemy для работы с БД по URL"""
     return create_async_engine(url=url)
-
-
-def create_engine(
-        username: str,
-        password: str,
-        host: str,
-        port: int,
-        database: str
-) -> AsyncEngine:
-    """Получить async engine sqlalchemy для работы с БД"""
-    url = get_db_connection_url(
-        username=username,
-        password=password,
-        host=host,
-        port=port,
-        database=database
-    )
-    return create_engine_by_url(url=url)
-
-
-def create_session_maker(
-        engine: AsyncEngine
-):
-    return sessionmaker(
-        engine,
-        expire_on_commit=False,
-        class_=AsyncSession
-    )
 
 
 class EngineStorage:

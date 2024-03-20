@@ -2,7 +2,7 @@ from pathlib import Path
 
 from dotenv import dotenv_values
 
-from utils.configuration.storages.loaders.base import ConfigLoader
+from src.utils.configuration.storages.loaders.base import ConfigLoader
 
 
 class EnvConfigLoader(ConfigLoader):

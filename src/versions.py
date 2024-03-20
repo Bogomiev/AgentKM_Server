@@ -3,7 +3,7 @@ from typing import NamedTuple, Iterable, Union
 from fastapi import APIRouter, FastAPI
 
 import middlewares
-from utils.url import url_concat
+from src.utils.url import url_concat
 
 
 class FirstVersionAPIRouterItem(NamedTuple):

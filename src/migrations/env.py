@@ -5,9 +5,9 @@ from sqlalchemy import pool
 
 from alembic import context
 
-import settings
-from db.postgresdb import SqlBase
-
+from src import settings
+from src.db.postgresdb import SqlBase
+from src.models.user import User
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
