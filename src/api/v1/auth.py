@@ -3,7 +3,7 @@ import uuid
 from fastapi import APIRouter
 from fastapi_users import FastAPIUsers
 
-from src.auth.auth import auth_backend
+from src.auth.auth import auth_backend, auth_backend_refresh
 from src.auth.manager import get_user_manager
 from src.models.user import User
 from src.schemas.user import UserRead, UserCreate, UserUpdate
@@ -15,6 +15,11 @@ fastapi_users = FastAPIUsers[User, uuid.UUID](get_user_manager, [auth_backend])
 router.include_router(
     fastapi_users.get_auth_router(auth_backend), prefix="/auth/jwt", tags=["auth"]
 )
+
+router.include_router(
+    fastapi_users.get_auth_router(auth_backend_refresh), prefix="/auth/jwt", tags=["auth"]
+)
+
 router.include_router(
     fastapi_users.get_register_router(UserRead, UserCreate),
     prefix="/auth",

@@ -4,7 +4,7 @@ from fastapi_users.authentication import (
     JWTStrategy,
 )
 
-from src.auth.refresh import BearerTransportRefresh
+from src.auth.refresh import BearerTransportRefresh, AuthenticationBackendRefresh
 from src.settings import ACCESS_TOKEN_EXPIRES, AUTH_SECRET_KEY, REFRESH_TOKEN_EXPIRES
 
 
@@ -25,3 +25,11 @@ auth_backend = AuthenticationBackend(
     transport=bearer_transport,
     get_strategy=get_jwt_strategy,
 )
+
+auth_backend_refresh = AuthenticationBackendRefresh(
+    name="jwt",
+    transport=bearer_transport_refresh,
+    get_strategy=get_jwt_strategy,
+    get_refresh_strategy=get_refresh_jwt_strategy,
+)
+
